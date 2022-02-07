@@ -1,6 +1,6 @@
 ---
 title: "Activity 5"
-author: "Name"
+author: "Josephat Oyondi"
 output: github_document
 ---
 
@@ -79,11 +79,20 @@ There are a number of ways to create a code chunk:
 Below, create a code chunk and name it `median_earnings`.
 Make sure there is an empty line above and below the code chunk.
 
+```{r}
+median_earnings <- summarise(college_recent_grads, median(median))
 
+median_earnings
+```
 
 In your newly created R code chunk, verify that the median income for all majors was $36,000.
 Using the `college_recent_grads` dataset and functions from `{dplyr}`, verify the *median* summary statistic for the variable median earnings of full-time, year-round workers (`median`).
 Name this numerical summary `median_all_majors`.
+
+```{r}
+median_all_majors <- summarise(college_recent_grads, median(median))
+median_all_majors
+```
 
 ![](README-img/noun_pause.png) **Planned Pause Point**: If you have any questions, contact your instructor. Otherwise feel free to continue on.
 
@@ -95,12 +104,16 @@ Be careful when you name your output summaries as we are dealing with things tha
 When I and obtaining numerical summaries for variables, I like to include the variable name in my summary name (e.g., `mean_med_earnings = mean(median)`).
 Create a code chunk and name it `summary_earnings`.
 
+```{r}
+summary_earnings <- summarise(college_recent_grads, sample(median), mean(median), sd(median), min(median), max(median))
 
+summary_earnings
+```
 
 Provide a discussion on what you believe the distribution of median earnings will look like.
 You should discuss the center, spread, and potential shape only using these values - I do NOT want to see any data visualizations here.
 
-**Response**:
+**Response**: Based on the values of the mean and median, the median is higher than the median. This indicates that the less number of college graduates earn higher amounts while a significant number of the graduates earn less than the average value. Additionally, the spread (as indicated by the standard deviation) shows there is a significant variation of earnings between different majors. The potential shape of the chart will be a curve decreasing as earnings increase. 
 
 
 ### Median Earnings by Major Category
@@ -110,12 +123,21 @@ Using the `college_recent_grads` dataset and functions from `{dplyr}`, obtain si
 *Arrange* this summary table by the median earning.
 Create a code chunk and name it `major_earnings`.
 
+```{r}
+major_earnings <- college_recent_grads %>% 
+  group_by(major_category) %>% #group by major category
+  summarise(college_recent_grads, sample(median), mean(median), sd(median), min(median), max(median)) #creates a summary of the median for all the earnings
 
+
+
+knitr::kable(major_earnings)
+
+```
 
 Provide a discussion on how each major compares to the overall distribution.
 You should discuss the center, spread, and potential shape only using these summary values - I do NOT want to see any data visualizations here.
 
-**Response**:
+**Response**: Engineering has the most highly earning college graduates while electrical engineering has the lowest earnings (based on the minimum and maximum values). The spread or range of the distribution is (110,000 - 22,000). The majors such as petroleum, mining and mineral engineering, metallugical engineering, and Naval architecture and marine engineering have earnings mostly distributed around the mean. Potentially, the earnings indicate that the distribution is a line curve with almost a normal distribution.
 
 
 Before we continue, add the following to the end of your pipeline (you will need to pipe first) in your `major_earnings` code chunk:
@@ -128,7 +150,7 @@ Knit your document with and without this last piped code.
 What changes about the output?
 When would this `knitr::kable` code be useful?
 
-**Response**:
+**Response**: With the introduction of the `knitr::kable`, a new table (scrollable) is created without a summary of the few rows than initially displayed in the output. 
 
 
 ![](README-img/noun_pause.png) **Planned Pause Point**: If you have any questions, contact your instructor. Otherwise feel free to continue on.
@@ -138,12 +160,17 @@ When would this `knitr::kable` code be useful?
 Let us see how well your descriptions in the [Median Earnings by Major Category](#median-earnings-by-major-category) section compare to the actual distributions.
 Plot the distribution of the variable `median` earnings of full-time, year-round workers for each `major_category` using the *boxplot* and *jitter* geometries.
 Create a code chunk and name it `major_boxplot`.
+```{r}
+major_boxplot <- ggplot(major_earnings, mapping = aes(x=median, y=major_category)) + geom_boxplot() + geom_jitter() #create boxplot and jitter plot
 
+major_boxplot
+
+```
 
 
 Provide a discussion on how your descriptions in the Median Earnings by Major Category section compares.
 
-**Response**:
+**Response**: As per the jitter and boxplots, the visualization indeed confirmed that the engineering major has the highest number of earners while education (major_category) had the most number of graduate students earning the minimum wages. On the other hand, physical science and business have the second highest earners.  
 
 
 <img src="README-img/noun_pause.png" alt="pause" width = "20"/> <b>Planned Pause Point</b>: If you feel that you have a good understanding of these commands, feel free to start working on your project. The remainder of this activity will help to expand these commands.
@@ -163,7 +190,20 @@ In this code chunk,
 4. Arrange the results so that `major_category` appear in alphabetical order ("A" at the top).
 
 
+```{r}
+category_rankings <- group_by(college_recent_grads, major_category) %>% 
+  summarise(
+    total = sum(total),
+    sharewomen = median(sharewomen),
+    unemployment_rate = median(unemployment_rate),
+    median = median(median)
+    
+  ) %>% 
+  #category_rankings$total_rank = rank(category_rankings$total)%>% 
+  arrange(major_category) #error
 
+category_rankings
+```
 Provide a discussion on how the `major_category` rankings compare.
 
 **Response**:
