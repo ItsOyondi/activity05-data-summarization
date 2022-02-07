@@ -193,14 +193,19 @@ In this code chunk,
 ```{r}
 category_rankings <- group_by(college_recent_grads, major_category) %>% 
   summarise(
-    total = sum(total),
-    sharewomen = median(sharewomen),
-    unemployment_rate = median(unemployment_rate),
-    median = median(median)
+    total_s = sum(total),
+    sharewomen_m = median(sharewomen),
+    unemployment_rate_m = median(unemployment_rate),
+    median_m = median(median),
+    #start ranking
+    total_rank = rank(total),
+    sharewomen_rank = rank(sharewomen),
+    unemployment_rate_rank = rank(unemployment_rate),
+    median_rank = rank(median)
     
-  ) %>% 
-  #category_rankings$total_rank = rank(category_rankings$total)%>% 
-  arrange(major_category) #error
+  ) %>%
+  
+  arrange(major_category) 
 
 category_rankings
 ```
